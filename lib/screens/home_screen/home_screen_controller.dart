@@ -10,6 +10,7 @@ class HomeScreenController extends GetxController {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   final radioValues = 0.obs;
+  final isLoading = false.obs;
   final selectedDate = DateTime(DateTime.now().year - 18).obs;
   final employeeData = EmployeeData().obs;
   final empDataList = <EmployeeData>[].obs;
@@ -50,17 +51,19 @@ class HomeScreenController extends GetxController {
   Future<void> getEmployeeData() async {
     dio.Response response;
     try {
+      isLoading.value = true;
       response = await dioClient.dio.get('employee',
           queryParameters: {'noofRecords': 10, 'idStarts': 1001});
       print(response.statusCode);
       if (response.statusCode == 200) {
         empDataList.value = employeeDataFromJson(jsonEncode(response.data));
-
+        isLoading.value =false;
         // List<EmployeeData> data = employeeDataFromJson(response.data);
         // return data;
       }
     } catch (e) {
       print(e);
+      isLoading.value =false;
     }
   }
 

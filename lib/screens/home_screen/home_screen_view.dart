@@ -44,10 +44,10 @@ class HomeScreen extends StatelessWidget {
                 ),
                 Obx(() => SizedBox(
                     height: 560,
-                    child: ListView.builder(itemBuilder: (context,index){
+                    child: homeController.isLoading.value? const Center(child: CircularProgressIndicator(),) :ListView.builder(itemBuilder: (context,index){
                         return Card(
                           color: Colors.blue.shade50,
-                          child: ListTile(
+                          child: homeController.empDataList.isEmpty? const Text('No Data Found'): ListTile(
                             onTap: () {
                               homeController.empData.value = homeController.empDataList[index];
                               Get.to(()=> EmployeeDisplayCard());
@@ -58,6 +58,7 @@ class HomeScreen extends StatelessWidget {
                               child: Image.network(homeController.empDataList[index].imageUrl!),
                             ),
                             title: Text('${homeController.empDataList[index].firstName} ${homeController.empDataList[index].lastName!}',style: const TextStyle(fontWeight: FontWeight.w500,fontSize: 18),),
+                            subtitle: Row(children: [Expanded(child: Text('Age : ${homeController.empDataList[index].age}')),Expanded(child: Text('Salary : ${homeController.empDataList[index].salary}')),const Spacer(flex: 2,)],),
                           ),
                         );
                       },itemCount: homeController.empDataList.length,padding: const EdgeInsets.symmetric(vertical: 5),)
